@@ -4,6 +4,8 @@ services:
     app:
         build: .
         image: app:latest
+        volumes:
+            - ./logs/:/logs/
         ports:
             - 8080:8080
 
@@ -26,3 +28,12 @@ services:
         depends_on:
             elasticsearch:
                 condition: service_healthy
+
+    filebeat:
+        image: docker.elastic.co/beats/filebeat:6.5.1
+        depends_on:
+            elasticsearch:
+            condition: service_healthy
+        volumes:
+            - ./resources/filebeat.yml:/usr/share/filebeat/filebeat.yml
+            - ./logs/:/logs/
