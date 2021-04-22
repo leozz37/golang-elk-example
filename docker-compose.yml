@@ -18,3 +18,11 @@ services:
             retries: 10
         ports:
             - 9200:9200
+
+    logstash:
+        image: docker.elastic.co/logstash/logstash:7.6.2
+        volumes:
+            - ./resources/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+        depends_on:
+            elasticsearch:
+                condition: service_healthy
