@@ -6,3 +6,15 @@ services:
         image: app:latest
         ports:
             - 8080:8080
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+        volumes:
+            - ./resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+        healthcheck:
+            test: ["CMD", "curl", "-s", "-f", "http://localhost:9200/_cat/health"]
+            interval: 3s
+            timeout: 3s
+            retries: 10
+        ports:
+            - 9200:9200
