@@ -33,7 +33,20 @@ services:
         image: docker.elastic.co/beats/filebeat:6.5.1
         depends_on:
             elasticsearch:
-            condition: service_healthy
+                condition: service_healthy
         volumes:
             - ./resources/filebeat.yml:/usr/share/filebeat/filebeat.yml
             - ./logs/:/logs/
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana:7.6.2
+        depends_on:
+            elasticsearch:
+                condition: service_healthy
+        healthcheck:
+            test: ["CMD", "curl", "-s", "-f", "http://localhost:5601/api/status"]
+            interval: 3s
+            timeout: 3s
+            retries: 50
+        ports:
+            - 5601:5601
